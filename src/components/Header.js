@@ -5,30 +5,22 @@ import { useNavigate } from "react-router-dom";
 export default function Header({ title, pageCount }) {
   const navigate = useNavigate();
 
-  const initialValues = {
-    fname: "",
-    lname: "",
-    email: "",
-    image: "",
-    textarea: "",
-    phone: "",
-  };
-  // useEffect(() => {
-  //   sessionStorage.clear();
-  //   console.log("rendered");
-  // }, []);
+  // const initialValues = {
+  //   name: "",
+  //   surname: "",
+  //   email: "",
+  //   image: "",
+  //   about_me: "",
+  //   phone: "",
+  // };
 
   return (
     <header className="header">
       <button
         onClick={() => {
           navigate("/");
-          // sessionStorage.setItem("showResume", false);
-          // sessionStorage.removeItem("formData");
           sessionStorage.clear();
-          // sessionStorage.removeItem("formData2");
-          sessionStorage.setItem("formData", JSON.stringify(initialValues));
-          //   //   localStorage.removeItem("imageUrl");
+          // sessionStorage.setItem("formData", JSON.stringify(initialValues));
         }}
       >
         <FaAngleLeft />

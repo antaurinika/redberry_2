@@ -1,44 +1,75 @@
 import { useFormik } from "formik";
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import FetchDegrees from "../components/FetchDegrees";
 import Header from "../components/Header";
 import Resume from "../components/Resume";
 
+import { PostData } from "../components/PostData";
+
 const initialValues = {
-  school: "",
-  degree: "",
-  graduation: "",
-  desc: "",
+  educations: {
+    institute: "",
+    degree: "",
+    due_date: "",
+    description: "",
+  },
 };
 const validate = (values) => {
   let errors = {};
-  if (!values.school) {
-    errors.school = "სასწავლებელი სავალდებულოა";
-  } else if (values.school.length < 2) {
-    errors.school = "მინიმუმ 2 სიმბოლო";
+  if (!values.institute) {
+    errors.institute = "სასწავლებელი სავალდებულოა";
+  } else if (values.institute.length < 2) {
+    errors.institute = "მინიმუმ 2 სიმბოლო";
   }
-  if (!values.degree) {
+  if (values.degree === "") {
     errors.degree = "ხარისხი სავალდებულოა";
   }
-  if (!values.graduation) {
-    errors.graduation = "დამთავრების თარიღი სავალდებულოა";
+  if (!values.due_date) {
+    errors.due_date = "დამთავრების თარიღი სავალდებულოა";
   }
-  if (!values.desc) {
-    errors.desc = "აღწერა სავალდებულოა";
+  if (!values.description) {
+    errors.description = "აღწერა სავალდებულოა";
   }
   return errors;
 };
 
-export default function Education() {
+export default function Education({ binaryImage }) {
   const navigate = useNavigate();
-  const [educationValue, setEducationValue] = useState(initialValues);
+  const [data, setData] = useState([]);
+  const [educationValue, setEducationValue] = useState(
+    initialValues.educations
+  );
+
   const formData3 = JSON.parse(sessionStorage.getItem("formData3"));
   const formData2 = JSON.parse(sessionStorage.getItem("formData2"));
+  const formData = JSON.parse(sessionStorage.getItem("formData"));
+
+  useEffect(() => {
+    fetch("https://resume.redberryinternship.ge/api/degrees")
+      .then((res) => res.json())
+      .then((data) => setData(data));
+  }, []);
 
   const onSubmit = (values) => {
-    navigate("/resumefinal");
     sessionStorage.setItem("formData3", JSON.stringify(values));
     setEducationValue((prev) => (prev = { ...prev, ...formData3 }));
+    delete educationValue.degree;
+    const dataToPost = {
+      ...formData,
+      // image: (formData.image),
+      experiences: [formData2],
+      educations: [
+        {
+          ...educationValue,
+          degree_id: JSON.parse(sessionStorage.getItem("degree_id")),
+        },
+      ],
+    };
+    if (JSON.stringify(formik.errors) === "{}") {
+      PostData(dataToPost);
+      console.log(dataToPost);
+    }
   };
   const formik = useFormik({
     initialValues: educationValue,
@@ -47,10 +78,10 @@ export default function Education() {
   });
   useEffect(() => {
     if (
-      educationValue.school === "" &&
+      educationValue.institute === "" &&
       educationValue.degree === "" &&
-      educationValue.graduation === "" &&
-      educationValue.desc === ""
+      educationValue.due_date === "" &&
+      educationValue.description === ""
     ) {
       setEducationValue((prev) => (prev = { ...prev, ...formData3 }));
       Object.assign(formik.values, formData3);
@@ -61,26 +92,32 @@ export default function Education() {
     Object.assign(formik.values, formData3);
   }, [educationValue]);
 
+  // --- get degree id for server ---
   const handleOnChange = (e) => {
     const name = e.target.name;
     const value = e.target.value;
+    // console.log(formatData);
+    for (let option of data) {
+      if (option.title === value) {
+        sessionStorage.setItem("degree_id", option.id);
+      }
+    }
     setEducationValue((prev) => (prev = { ...prev, [name]: value }));
   };
-  console.log(formik.errors);
 
   return (
     <div>
       <Header title="განათლება" pageCount={3} />
       <form onSubmit={formik.handleSubmit} onChange={handleOnChange}>
         <div>
-          <label htmlFor="school">სასწავლებელი</label>
+          <label htmlFor="institute">სასწავლებელი</label>
           <br />
           <input
             type="text"
-            name="school"
-            id="school"
+            name="institute"
+            id="institute"
             placeholder="სასწავლებელი"
-            value={educationValue.school}
+            value={educationValue.institute}
             onChange={formik.handleChange}
             onBlur={formik.handleBlur}
           />
@@ -88,38 +125,29 @@ export default function Education() {
         </div>
         <div>
           <label htmlFor="">ხარისხი</label>
-          <select
-            name="degree"
-            placeholder="აირჩიეთ ხარისხი"
-            onChange={formik.handleChange}
-            onBlur={formik.handleBlur}
-            value={educationValue.degree}
-          >
-            <option name="degree" value="">
-              აირჩიეთ ხარისხი
-            </option>
-            <option value="ბაკალავრიატი">ბაკალავრიატი</option>
-            <option value="მაგისტრატურა">მაგისტრატურა</option>
-            <option value="დოქტორანტურა">დოქტორანტურა</option>
-          </select>
+          <FetchDegrees
+            formikObj={formik}
+            educationValue={educationValue}
+            data={data}
+          />
         </div>
         <div>
-          <label htmlFor="graduation">დამთავრების რიცხვი</label>
+          <label htmlFor="due_date">დამთავრების რიცხვი</label>
           <br />
           <input
             type="date"
-            name="graduation"
-            id="graduation"
-            value={educationValue.graduation}
+            name="due_date"
+            id="due_date"
+            value={educationValue.due_date}
             onChange={formik.handleChange}
             onBlur={formik.handleBlur}
           />
         </div>
         <div>
-          <label htmlFor="desc">აღწერა</label>
+          <label htmlFor="description">აღწერა</label>
           <textarea
-            name="desc"
-            id="desc"
+            name="description"
+            id="description"
             placeholder="განათლების აღწერა"
             value={educationValue.description}
             onChange={formik.handleChange}

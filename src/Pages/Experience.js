@@ -4,6 +4,16 @@ import { useFormik } from "formik";
 import Resume from "../components/Resume";
 import Header from "../components/Header";
 
+const initialValues = {
+  experiences: {
+    position: "",
+    employer: "",
+    start_date: "",
+    due_date: "",
+    description: "",
+  },
+};
+
 const validate = (values) => {
   let errors = {};
   if (!values.position) {
@@ -16,35 +26,28 @@ const validate = (values) => {
   } else if (values.employer.length < 2) {
     errors.employer = "მინიმუმ 2 სიმბოლო";
   }
-  if (!values.hireDate) {
-    errors.hireDate = "სავალდებულოა";
+  if (!values.start_date) {
+    errors.start_date = "სავალდებულოა";
   }
-  if (!values.leaveDate) {
-    errors.hireDate = "სავალდებულოა";
+  if (!values.due_date) {
+    errors.start_date = "სავალდებულოა";
   }
   if (!values.description) {
     errors.description = "სავალდებულოა";
   }
   return errors;
 };
-const initialValues = {
-  position: "",
-  employer: "",
-  hireDate: "",
-  leaveDate: "",
-  description: "",
-};
 
 export default function Experience() {
   const navigate = useNavigate();
-  const [value, setValue] = useState(initialValues);
+  const [value, setValue] = useState(initialValues.experiences);
   const formData2 = JSON.parse(sessionStorage.getItem("formData2"));
   useEffect(() => {
     if (
       value.position === "" &&
       value.employer === "" &&
-      value.hireDate === "" &&
-      value.leaveDate === "" &&
+      value.start_date === "" &&
+      value.due_date === "" &&
       value.description === ""
     ) {
       setValue((prev) => (prev = { ...prev, ...formData2 }));
@@ -60,7 +63,6 @@ export default function Experience() {
   const handleOnChange = (e) => {
     const name = e.target.name;
     const value = e.target.value;
-    // console.log(name, value);
     setValue((prev) => (prev = { ...prev, [name]: value }));
   };
 
@@ -112,25 +114,25 @@ export default function Experience() {
         </div>
         <div>
           <div>
-            <label htmlFor="hireDate">დაწყების რიცხვი</label>
+            <label htmlFor="start_date">დაწყების რიცხვი</label>
             <br />
             <input
               type="date"
-              name="hireDate"
-              id="hireDate"
-              value={value.hireDate}
+              name="start_date"
+              id="start_date"
+              value={value.start_date}
               onChange={formik.handleChange}
               onBlur={formik.handleBlur}
             />
           </div>
           <div>
-            <label htmlFor="leaveDate">დამთავრების რიცხვი</label>
+            <label htmlFor="due_date">დამთავრების რიცხვი</label>
             <br />
             <input
               type="date"
-              name="leaveDate"
-              id="leaveDate"
-              value={value.leaveDate}
+              name="due_date"
+              id="due_date"
+              value={value.due_date}
               onChange={formik.handleChange}
               onBlur={formik.handleBlur}
             />
