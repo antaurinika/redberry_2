@@ -1,0 +1,61 @@
+.username {
+  font-size: 34px;
+  font-weight: bold;
+  color: #f93b1d;
+}
+.email {
+  margin: 17px 0 10px 0;
+  font-size: 18px;
+}
+.phone {
+  font-size: 18px;
+}
+
+.icon {
+  color: #898989;
+  width: 20px;
+  height: 20px;
+  margin-right: 10px;
+}
+.title {
+  font-size: 18px;
+  font-weight: bold;
+  color: #f93b1d;
+  margin: 34px 0 15px 0;
+}
+.aboutMe {
+  max-width: 432px;
+  white-space: pre-wrap;
+}
+.userImage {
+  border-radius: 50%;
+  width: 246px;
+  height: 246px;
+}
+
+.position_employer {
+  font-size: 18px;
+  font-weight: 500;
+}
+.date {
+  margin: 7px 0 16px 0;
+  font-style: italic;
+  color: #909090;
+}
+.underline {
+  display: block;
+  width: 100%;
+  height: 2px;
+  background-color: #c1c1c1;
+  margin: 19px 0 24px 0;
+}
+.description {
+  white-space: pre-wrap;
+  max-width: 100%;
+  padding-bottom: 5rem;
+}
+.footer {
+  width: 40px;
+  padding-bottom: 5rem;
+  z-index: 10;
+}

@@ -1,0 +1,31 @@
+.landing {
+  height: 100vh;
+  width: 100vw;
+  background-image: url(../images/background.png);
+}
+.underline {
+  width: 90%;
+  border-bottom: 1px solid black;
+  margin: auto;
+}
+.logo {
+  padding: 25px;
+}
+
+.button {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  padding: 16px 134px;
+  background-color: black;
+  color: white;
+  font-size: 20px;
+  border-radius: 10px;
+  z-index: 10;
+}
+.logo_2 {
+  position: absolute;
+  left: 56%;
+  top: 44%;
+}

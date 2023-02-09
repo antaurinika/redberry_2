@@ -1,16 +1,13 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 
-export default function FetchDegrees({ formikObj, educationValue, data }) {
-  // const [data, setData] = useState([]);
+import InputCss from "../styles/InputField.module.css";
 
-  // useEffect(() => {
-  //   fetch("https://resume.redberryinternship.ge/api/degrees")
-  //     .then((res) => res.json())
-  //     .then((data) => setData(data));
-
-  //   getOptionData(data);
-  // }, []);
-
+export default function FetchDegrees({
+  handleChange,
+  educationValue,
+  data,
+  formikObj,
+}) {
   const setOptions = () => {
     return data.map((degree) => (
       <option key={degree.id} id={degree.id} value={degree.title}>
@@ -20,11 +17,15 @@ export default function FetchDegrees({ formikObj, educationValue, data }) {
   };
 
   return (
-    <div>
+    <div className={InputCss.input}>
+      <label htmlFor="" className={InputCss.label}>
+        ხარისხი
+      </label>
       <select
+        className={`${InputCss.inputFieldShort} ${InputCss.select}`}
         name="degree"
         placeholder="აირჩიეთ ხარისხი"
-        onChange={formikObj.handleChange}
+        onChange={handleChange}
         onBlur={formikObj.handleBlur}
         value={educationValue.degree}
       >

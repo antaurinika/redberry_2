@@ -1,0 +1,21 @@
+.window {
+  /* overflow-y: hidden; */
+  display: flex;
+  /* height: 100%; */
+}
+.container {
+  background-color: #f9f9f9;
+  min-width: 55%;
+  height: 100vh;
+}
+.form {
+  width: 80%;
+  margin-top: 6rem;
+  margin: 6rem auto 0 auto;
+}
+.resume {
+  margin: 4rem 5rem 5rem 5rem;
+  width: 80%;
+  overflow-y: auto;
+  max-height: 100vh;
+}

@@ -1,11 +1,13 @@
 import { useFormik } from "formik";
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import FetchDegrees from "../components/FetchDegrees";
 import Header from "../components/Header";
 import Resume from "../components/Resume";
-
 import { PostData } from "../components/PostData";
+import EducationForm from "../components/EducationForm";
+import PageCss from "../styles/Page.module.css";
+import InputCss from "../styles/InputField.module.css";
+import Flexbox from "../styles/Flexbox.module.css";
 
 const initialValues = {
   educations: {
@@ -34,12 +36,13 @@ const validate = (values) => {
   return errors;
 };
 
-export default function Education({ binaryImage }) {
+export default function Education() {
   const navigate = useNavigate();
   const [data, setData] = useState([]);
   const [educationValue, setEducationValue] = useState(
     initialValues.educations
   );
+  const [imageFile, setImageFile] = useState();
 
   const formData3 = JSON.parse(sessionStorage.getItem("formData3"));
   const formData2 = JSON.parse(sessionStorage.getItem("formData2"));
@@ -51,31 +54,6 @@ export default function Education({ binaryImage }) {
       .then((data) => setData(data));
   }, []);
 
-  const onSubmit = (values) => {
-    sessionStorage.setItem("formData3", JSON.stringify(values));
-    setEducationValue((prev) => (prev = { ...prev, ...formData3 }));
-    delete educationValue.degree;
-    const dataToPost = {
-      ...formData,
-      // image: (formData.image),
-      experiences: [formData2],
-      educations: [
-        {
-          ...educationValue,
-          degree_id: JSON.parse(sessionStorage.getItem("degree_id")),
-        },
-      ],
-    };
-    if (JSON.stringify(formik.errors) === "{}") {
-      PostData(dataToPost);
-      console.log(dataToPost);
-    }
-  };
-  const formik = useFormik({
-    initialValues: educationValue,
-    onSubmit,
-    validate,
-  });
   useEffect(() => {
     if (
       educationValue.institute === "" &&
@@ -87,10 +65,51 @@ export default function Education({ binaryImage }) {
       Object.assign(formik.values, formData3);
     }
   }, []);
+
   useEffect(() => {
     sessionStorage.setItem("formData3", JSON.stringify(educationValue));
     Object.assign(formik.values, formData3);
   }, [educationValue]);
+
+  // ---- convert base64 to file ----
+  useEffect(() => {
+    fetch(sessionStorage.getItem("imageUrl"))
+      .then((res) => res.blob())
+      .then((blob) => {
+        const file = new File([blob], "File name", { type: "image/png" });
+        setImageFile(file);
+      });
+  }, []);
+  // ---- format data to post ---
+  const formatData = () => {
+    const dataToPost = {
+      ...formData,
+      image: imageFile,
+      experiences: [formData2],
+      educations: [
+        {
+          ...educationValue,
+          degree_id: JSON.parse(sessionStorage.getItem("degree_id")),
+        },
+      ],
+    };
+    return dataToPost;
+  };
+
+  const onSubmit = (values) => {
+    console.log(formatData());
+    if (JSON.stringify(formik.errors) === "{}") {
+      delete educationValue.degree;
+      PostData(formatData());
+      console.log(formatData());
+      navigate("/resumefinal");
+    }
+  };
+  const formik = useFormik({
+    initialValues: educationValue,
+    onSubmit,
+    validate,
+  });
 
   // --- get degree id for server ---
   const handleOnChange = (e) => {
@@ -105,66 +124,37 @@ export default function Education({ binaryImage }) {
     setEducationValue((prev) => (prev = { ...prev, [name]: value }));
   };
 
+  console.log(formik.values);
   return (
-    <div>
-      <Header title="განათლება" pageCount={3} />
-      <form onSubmit={formik.handleSubmit} onChange={handleOnChange}>
-        <div>
-          <label htmlFor="institute">სასწავლებელი</label>
-          <br />
-          <input
-            type="text"
-            name="institute"
-            id="institute"
-            placeholder="სასწავლებელი"
-            value={educationValue.institute}
-            onChange={formik.handleChange}
-            onBlur={formik.handleBlur}
-          />
-          <p>მინიმუმ 2 სიმბოლი</p>
-        </div>
-        <div>
-          <label htmlFor="">ხარისხი</label>
-          <FetchDegrees
+    <div className={`${PageCss.window}`}>
+      <div className={PageCss.container}>
+        <Header title="განათლება" pageCount={3} />
+        <form
+          onSubmit={formik.handleSubmit}
+          onChange={handleOnChange}
+          className={PageCss.form}
+        >
+          <EducationForm
             formikObj={formik}
+            setEducationValue={setEducationValue}
             educationValue={educationValue}
             data={data}
           />
-        </div>
-        <div>
-          <label htmlFor="due_date">დამთავრების რიცხვი</label>
-          <br />
-          <input
-            type="date"
-            name="due_date"
-            id="due_date"
-            value={educationValue.due_date}
-            onChange={formik.handleChange}
-            onBlur={formik.handleBlur}
-          />
-        </div>
-        <div>
-          <label htmlFor="description">აღწერა</label>
-          <textarea
-            name="description"
-            id="description"
-            placeholder="განათლების აღწერა"
-            value={educationValue.description}
-            onChange={formik.handleChange}
-            onBlur={formik.handleBlur}
-          ></textarea>
-          <button>მეტი სასწავლებლის დამატება</button>
-        </div>
 
-        <button
-          onClick={() => {
-            navigate(-1);
-          }}
-        >
-          უკან
-        </button>
-        <button type="submit">submit</button>
-      </form>
+          <button
+            className={InputCss.backBtn}
+            type="button"
+            onClick={() => {
+              navigate(-1);
+            }}
+          >
+            უკან
+          </button>
+          <button type="submit" className={InputCss.nextBtn}>
+            დასრულება
+          </button>
+        </form>
+      </div>
       <Resume showResume={true} formData2={formData2} formData3={formData3} />
     </div>
   );

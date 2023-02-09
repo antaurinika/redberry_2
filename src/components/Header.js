@@ -1,32 +1,26 @@
 import React, { useEffect } from "react";
 import { FaAngleLeft } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
+import HeaderCss from "../styles/Header.module.css";
 
 export default function Header({ title, pageCount }) {
   const navigate = useNavigate();
 
-  // const initialValues = {
-  //   name: "",
-  //   surname: "",
-  //   email: "",
-  //   image: "",
-  //   about_me: "",
-  //   phone: "",
-  // };
-
   return (
-    <header className="header">
+    <header className={HeaderCss.header}>
       <button
+        className={HeaderCss.backBtn}
         onClick={() => {
-          navigate("/");
           sessionStorage.clear();
-          // sessionStorage.setItem("formData", JSON.stringify(initialValues));
+          navigate("/");
         }}
       >
         <FaAngleLeft />
       </button>
-      <h1 className="title">{title}</h1>
-      <p className="pageCount">{pageCount}/3</p>
+      <div className={HeaderCss.headerText}>
+        <h1 className={HeaderCss.title}>{title}</h1>
+        <p className={HeaderCss.pageCount}>{pageCount}/3</p>
+      </div>
     </header>
   );
 }

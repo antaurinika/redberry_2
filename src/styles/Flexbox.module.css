@@ -1,0 +1,9 @@
+/* .container {
+  display: flex;
+  overflow-x: hidden;
+} */
+
+.resumeContainer {
+  display: flex;
+  gap: 3rem;
+}
