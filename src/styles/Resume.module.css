@@ -24,7 +24,7 @@
   margin: 34px 0 15px 0;
 }
 .aboutMe {
-  max-width: 432px;
+  /* width: 100%; */
   white-space: pre-wrap;
 }
 .userImage {
@@ -45,17 +45,48 @@
 .underline {
   display: block;
   width: 100%;
-  height: 2px;
+  height: 1px;
   background-color: #c1c1c1;
   margin: 19px 0 24px 0;
 }
 .description {
   white-space: pre-wrap;
   max-width: 100%;
-  padding-bottom: 5rem;
 }
 .footer {
   width: 40px;
-  padding-bottom: 5rem;
+  padding-bottom: 2.75rem;
+  margin-top: 5rem;
   z-index: 10;
+}
+.popupContainer {
+  height: 167px;
+  width: 427px;
+  position: absolute;
+  right: 70px;
+  top: 53px;
+  font-weight: 500;
+  font-size: 28px;
+  padding: 40px 32px;
+  box-shadow: 0px 4px 28px 0px rgba(0, 0, 0, 0.25);
+  border-radius: 10px;
+}
+.finalResumeContainer {
+  border: 1px solid black;
+  margin-top: 54px;
+  margin-bottom: 129px;
+  height: max-content;
+}
+.closePopup {
+  position: absolute;
+  right: 8px;
+  top: 14px;
+}
+.backBtn {
+  width: 40px;
+  height: 40px;
+  border: none;
+  border-radius: 50%;
+  margin: 3rem;
+  position: absolute;
 }

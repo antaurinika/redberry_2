@@ -9,6 +9,7 @@ export const PostData = async (body) => {
       },
     });
     console.log(res);
+    sessionStorage.setItem("serverData", JSON.stringify(res.data));
   } catch (error) {
     console.log(error);
   }

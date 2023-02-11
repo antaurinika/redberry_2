@@ -1,7 +1,5 @@
 .window {
-  /* overflow-y: hidden; */
   display: flex;
-  /* height: 100%; */
 }
 .container {
   background-color: #f9f9f9;
@@ -16,6 +14,7 @@
 .resume {
   margin: 4rem 5rem 5rem 5rem;
   width: 80%;
+  max-width: 822px;
   overflow-y: auto;
-  max-height: 100vh;
+  max-height: 90vh;
 }

@@ -5,7 +5,11 @@ import Resume from "../components/Resume";
 import Header from "../components/Header";
 import InputCss from "../styles/InputField.module.css";
 import PageCss from "../styles/Page.module.css";
-import Flexbox from "../styles/Flexbox.module.css";
+import NextButton from "../components/NextButton";
+import BackButton from "../components/BackButton";
+import AddMoreButton from "../components/AddMoreButton";
+import InputField from "../components/InputField";
+import TextAreaField from "../components/TextAreaField";
 const initialValues = {
   experiences: {
     position: "",
@@ -32,7 +36,7 @@ const validate = (values) => {
     errors.start_date = "სავალდებულოა";
   }
   if (!values.due_date) {
-    errors.start_date = "სავალდებულოა";
+    errors.due_date = "სავალდებულოა";
   }
   if (!values.description) {
     errors.description = "სავალდებულოა";
@@ -41,9 +45,12 @@ const validate = (values) => {
 };
 
 export default function Experience() {
+  const formData2 = JSON.parse(sessionStorage.getItem("formData2"));
+  const formData3 = JSON.parse(sessionStorage.getItem("formData3"));
+
   const navigate = useNavigate();
   const [value, setValue] = useState(initialValues.experiences);
-  const formData2 = JSON.parse(sessionStorage.getItem("formData2"));
+
   useEffect(() => {
     if (
       value.position === "" &&
@@ -59,14 +66,13 @@ export default function Experience() {
 
   useEffect(() => {
     sessionStorage.setItem("formData2", JSON.stringify(value));
-    Object.assign(formik.values, formData2);
   }, [value]);
 
   const handleOnChange = (e) => {
     const name = e.target.name;
     const value = e.target.value;
     setValue((prev) => (prev = { ...prev, [name]: value }));
-    Object.assign(formik.values, formData2);
+    // Object.assign(formik.values, formData2);
   };
 
   const onSubmit = (values) => {
@@ -79,116 +85,67 @@ export default function Experience() {
     onSubmit,
     validate,
   });
-  console.log(formik.errors);
 
   return (
     <div className={`${PageCss.window}`}>
       <div className={PageCss.container}>
-        <Header title="გამოცდილება" pageCount={2} />
+        <Header title="გამოცდილება" pageCount={2} formik={formik} />
         <form
           onSubmit={formik.handleSubmit}
           onChange={handleOnChange}
           className={PageCss.form}
         >
-          <div className={InputCss.containerLong}>
-            <label htmlFor="position" className={InputCss.label}>
-              თანამდებობა
-            </label>
-            <input
-              className={InputCss.inputFieldLong}
-              type="text"
-              name="position"
-              id="position"
-              placeholder="დეველოპერი, დიზაინერი, ა.შ."
-              value={value.position}
-              onChange={formik.handleChange}
-              onBlur={formik.handleBlur}
-            />
-            <p className={InputCss.error}>მინიმუმ 2 სიმბოლი</p>
-          </div>
-          <div className={InputCss.containerLong}>
-            <label htmlFor="employer" className={InputCss.label}>
-              დამსაქმებელი
-            </label>
-            <input
-              className={InputCss.inputFieldLong}
-              type="text"
-              name="employer"
-              id="employer"
-              placeholder="დამსაქმებელი"
-              value={value.employer}
-              onChange={formik.handleChange}
-              onBlur={formik.handleBlur}
-            />
-            <p className={InputCss.error}>მინიმუმ 2 სიმბოლი</p>
-          </div>
+          <InputField
+            formik={formik}
+            label="თანამდეობა"
+            type="text"
+            name="position"
+            placeholder="დეველოპერი, დიზაინერი, ა.შ."
+            inputSize="inputFieldLong"
+            errorMessage="მინიმუმ 2 სიმბოლი"
+          />
+          <InputField
+            formik={formik}
+            label="დამსაქმებელი"
+            type="text"
+            name="employer"
+            placeholder="დამსაქმებელი"
+            inputSize="inputFieldLong"
+            errorMessage="მინიმუმ 2 სიმბოლი"
+          />
           <div className={InputCss.shortInputContainer}>
-            <div className={InputCss.input}>
-              <label htmlFor="start_date" className={InputCss.label}>
-                დაწყების რიცხვი
-              </label>
-              <input
-                className={InputCss.inputFieldShort}
-                type="date"
-                name="start_date"
-                id="start_date"
-                value={value.start_date}
-                onChange={formik.handleChange}
-                onBlur={formik.handleBlur}
-                required
-              />
-            </div>
-            <div className={InputCss.input}>
-              <label htmlFor="due_date" className={InputCss.label}>
-                დამთავრების რიცხვი
-              </label>
-              <input
-                className={InputCss.inputFieldShort}
-                type="date"
-                name="due_date"
-                id="due_date"
-                value={value.due_date}
-                onChange={formik.handleChange}
-                onBlur={formik.handleBlur}
-                required
-              />
-            </div>
+            <InputField
+              formik={formik}
+              label="დაწყების რიცხვი"
+              type="date"
+              name="start_date"
+              inputSize="inputFieldShort"
+              required={true}
+            />
+            <InputField
+              formik={formik}
+              label="დამთავრების რიცხვი"
+              type="date"
+              name="due_date"
+              inputSize="inputFieldShort"
+              required={true}
+            />
           </div>
-          <div className={InputCss.containerLong}>
-            <label htmlFor="description" className={InputCss.label}>
-              აღწერა
-            </label>
-            <textarea
-              className={`${InputCss.inputFieldLong} ${InputCss.textarea} ${InputCss.scroll}`}
-              name="description"
-              id="description"
-              placeholder="როლი თანამდებობაზე და ზოგადი აღწერა"
-              value={value.description}
-              onChange={formik.handleChange}
-              onBlur={formik.handleBlur}
-            ></textarea>
-          </div>
+          <TextAreaField
+            name="description"
+            label="აღწერა"
+            formik={formik}
+            placeholder="როლი თანამდებობაზე და ზოგადი აღწერა"
+          />
           <span className={InputCss.underline}></span>
-          <button type="button" className={InputCss.addMore}>
-            მეტი გამოცდილების დამატება
-          </button>
+          <AddMoreButton />
           <div>
-            <button
-              type="button"
-              className={InputCss.backBtn}
-              onClick={() => {
-                navigate(-1);
-              }}
-            >
-              უკან
-            </button>
-            <button type="submit" className={InputCss.nextBtn}>
-              შემდეგი
-            </button>
+            <BackButton title="გამოცდილების" />
+            <NextButton title="შემდეგი" />
           </div>
         </form>
       </div>
-      <Resume showResume={true} formData2={formData2} />
+      <Resume showResume={true} formData2={formData2} formData3={formData3} />
     </div>
   );
 }

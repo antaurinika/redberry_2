@@ -5,6 +5,11 @@ import Resume from "../components/Resume";
 import Header from "../components/Header";
 import PageCss from "../styles/Page.module.css";
 import InputCss from "../styles/InputField.module.css";
+import ErrorCss from "../styles/Errors.module.css";
+import InputField from "../components/InputField";
+import ImageField from "../components/ImageField";
+import NextButton from "../components/NextButton";
+import TextAreaField from "../components/TextAreaField";
 
 const initialValues = {
   name: "",
@@ -50,14 +55,15 @@ const validate = (values) => {
 };
 
 export default function PersonalInfo() {
-  const [value, setValue] = useState(initialValues);
-  const navigate = useNavigate();
-
   const formData = JSON.parse(sessionStorage.getItem("formData"));
   const formData2 = JSON.parse(sessionStorage.getItem("formData2"));
+  const formData3 = JSON.parse(sessionStorage.getItem("formData3"));
   const imageUrl = sessionStorage.getItem("imageUrl");
   const showResume = JSON.parse(sessionStorage.getItem("showResume"));
 
+  const [value, setValue] = useState(initialValues);
+
+  const navigate = useNavigate();
   useEffect(() => {
     if (
       value.name === "" &&
@@ -92,13 +98,11 @@ export default function PersonalInfo() {
     setValue((prev) => (prev = { ...prev, ...formData }));
     sessionStorage.setItem("formData", JSON.stringify(values));
   };
-
   const formik = useFormik({
     initialValues: value,
     onSubmit,
     validate,
   });
-  console.log(formik.errors);
 
   const getBase64 = (image) => {
     const fileReader = new FileReader();
@@ -112,124 +116,71 @@ export default function PersonalInfo() {
       fileReader.readAsDataURL(image.target.files[0]);
     }
   };
-
   return (
     <div className={`${PageCss.window}`}>
       <div className={PageCss.container}>
-        <Header title="პირადი ინფო" pageCount={1} />
+        <Header title="პირადი ინფო" pageCount={1} formik={formik} />
         <form
           onSubmit={formik.handleSubmit}
           onChange={handleOnChange}
           className={PageCss.form}
         >
           <div className={InputCss.shortInputContainer}>
-            <div className={InputCss.input}>
-              <label htmlFor="name" className={InputCss.label}>
-                სახელი
-              </label>
-              <input
-                type="text"
-                name="name"
-                id="name"
-                value={value.name}
-                placeholder="ანზორ"
-                className={InputCss.inputFieldShort}
-                onChange={formik.handleChange}
-                onBlur={formik.handleBlur}
-              />
+            <InputField
+              formik={formik}
+              label="სახელი"
+              type="text"
+              name="name"
+              placeholder="ანზორ"
+              inputSize="inputFieldShort"
+              errorMessage="მინიმუმ 2 ასო, ქართული ასოები"
+            />
 
-              <p className={InputCss.error}>მინიმუმ 2 ასო, ქართული ასოები</p>
-            </div>
-            <div className={InputCss.input}>
-              <label htmlFor="surname" className={InputCss.label}>
-                გვარი
-              </label>
-              <input
-                type="text"
-                name="surname"
-                id="surname"
-                placeholder="მუმლაძე"
-                value={value.surname}
-                className={InputCss.inputFieldShort}
-                onChange={formik.handleChange}
-                onBlur={formik.handleBlur}
-              />
-              <p className={InputCss.error}>მინიმუმ 2 ასო, ქართული ასოები</p>
-            </div>
-          </div>
-          <div className={InputCss.imageField}>
-            <p className={InputCss.label}> პირადი ფოტოს ატვირთვა</p>
-            <label htmlFor="image" className={InputCss.uploadBtn}>
-              ატვირთვა
-            </label>
-
-            <input
-              name="image"
-              type="file"
-              id="image"
-              placeholder="ატვირთვა"
-              accept="image/png, image/jpg"
-              src={imageUrl}
+            <InputField
+              formik={formik}
+              label="გვარი"
+              type="text"
+              name="surname"
+              placeholder="მუმლაძე"
+              inputSize="inputFieldShort"
+              errorMessage="მინიმუმ 2 ასო, ქართული ასოები"
             />
           </div>
-          <div className={InputCss.containerLong}>
-            <label htmlFor="about_me" className={InputCss.label}>
-              ჩემ შესახებ (არასავალდებულო)
-            </label>
-            <textarea
-              name="about_me"
-              id="about_me"
-              value={value.about_me}
-              className={`${InputCss.inputFieldLong} ${InputCss.textarea} ${InputCss.scroll}`}
-              placeholder="ზოგადი ინფო შენ შესახებ"
-              onChange={formik.handleChange}
-              onBlur={formik.handleBlur}
-            ></textarea>
-          </div>
-          <div className={InputCss.containerLong}>
-            <label htmlFor="email" className={InputCss.label}>
-              ელ. ფოსტა
-            </label>
-            <input
-              type="email"
-              name="email"
-              id="email"
-              placeholder="anzorr666@redberry.ge"
-              className={InputCss.inputFieldLong}
-              value={value.email}
-              onChange={formik.handleChange}
-              onBlur={formik.handleBlur}
-            />
-            <p className={InputCss.error}>უნდა მთავრდებოდეს @redberry.ge-ით</p>
-          </div>
-          <div className={InputCss.containerLong}>
-            <label htmlFor="phone_number" className={InputCss.label}>
-              მობილურის ნომერი
-            </label>
-            <input
-              type="tel"
-              name="phone_number"
-              id="phone_number"
-              placeholder="+995 551 12 34 56"
-              className={InputCss.inputFieldLong}
-              value={value.phone_number}
-              onChange={formik.handleChange}
-              onBlur={formik.handleBlur}
-            />
-            <p className={InputCss.error}>
-              უნდა აკმაყოფილებდეს ქართული მობილური ნომრის ფორმატს
-            </p>
+          <div className={InputCss.imageContainer}>
+            <ImageField imageUrl={imageUrl} formik={formik} />
           </div>
 
-          <button type="submit" className={InputCss.nextBtn}>
-            შემდეგი
-          </button>
+          <TextAreaField
+            name="about_me"
+            label="   ჩემ შესახებ (არასავალდებულო)"
+            formik={formik}
+            placeholder="ზოგადი ინფო შენ შესახებ"
+          />
+          <InputField
+            formik={formik}
+            label="ელ.ფოსტა"
+            type="email"
+            name="email"
+            placeholder="anzorr666@redberry.ge"
+            inputSize="inputFieldLong"
+            errorMessage="უნდა მთავრდებოდეს @redberry.ge-ით"
+          />
+          <InputField
+            formik={formik}
+            label="მობილურის ნომერი"
+            type="tel"
+            name="phone_number"
+            placeholder="+995 551 12 34 56"
+            inputSize="inputFieldLong"
+            errorMessage="  უნდა აკმაყოფილებდეს ქართული მობილური ნომრის ფორმატს"
+          />
+          <NextButton title="შემდეგი" />
         </form>
       </div>
       <Resume
         showResume={showResume}
-        formData={formData}
         formData2={formData2}
+        formData3={formData3}
       />
     </div>
   );

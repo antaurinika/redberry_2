@@ -6,8 +6,8 @@ import Resume from "../components/Resume";
 import { PostData } from "../components/PostData";
 import EducationForm from "../components/EducationForm";
 import PageCss from "../styles/Page.module.css";
-import InputCss from "../styles/InputField.module.css";
-import Flexbox from "../styles/Flexbox.module.css";
+import NextButton from "../components/NextButton";
+import BackButton from "../components/BackButton";
 
 const initialValues = {
   educations: {
@@ -37,16 +37,16 @@ const validate = (values) => {
 };
 
 export default function Education() {
+  const formData3 = JSON.parse(sessionStorage.getItem("formData3"));
+  const formData2 = JSON.parse(sessionStorage.getItem("formData2"));
+  const formData = JSON.parse(sessionStorage.getItem("formData"));
+
   const navigate = useNavigate();
   const [data, setData] = useState([]);
   const [educationValue, setEducationValue] = useState(
     initialValues.educations
   );
   const [imageFile, setImageFile] = useState();
-
-  const formData3 = JSON.parse(sessionStorage.getItem("formData3"));
-  const formData2 = JSON.parse(sessionStorage.getItem("formData2"));
-  const formData = JSON.parse(sessionStorage.getItem("formData"));
 
   useEffect(() => {
     fetch("https://resume.redberryinternship.ge/api/degrees")
@@ -68,7 +68,6 @@ export default function Education() {
 
   useEffect(() => {
     sessionStorage.setItem("formData3", JSON.stringify(educationValue));
-    Object.assign(formik.values, formData3);
   }, [educationValue]);
 
   // ---- convert base64 to file ----
@@ -97,11 +96,10 @@ export default function Education() {
   };
 
   const onSubmit = (values) => {
-    console.log(formatData());
     if (JSON.stringify(formik.errors) === "{}") {
       delete educationValue.degree;
+      formik.resetForm();
       PostData(formatData());
-      console.log(formatData());
       navigate("/resumefinal");
     }
   };
@@ -115,7 +113,6 @@ export default function Education() {
   const handleOnChange = (e) => {
     const name = e.target.name;
     const value = e.target.value;
-    // console.log(formatData);
     for (let option of data) {
       if (option.title === value) {
         sessionStorage.setItem("degree_id", option.id);
@@ -124,35 +121,24 @@ export default function Education() {
     setEducationValue((prev) => (prev = { ...prev, [name]: value }));
   };
 
-  console.log(formik.values);
   return (
     <div className={`${PageCss.window}`}>
       <div className={PageCss.container}>
-        <Header title="განათლება" pageCount={3} />
+        <Header title="განათლება" pageCount={3} formik={formik} />
         <form
           onSubmit={formik.handleSubmit}
           onChange={handleOnChange}
           className={PageCss.form}
         >
           <EducationForm
-            formikObj={formik}
+            formik={formik}
             setEducationValue={setEducationValue}
             educationValue={educationValue}
             data={data}
           />
 
-          <button
-            className={InputCss.backBtn}
-            type="button"
-            onClick={() => {
-              navigate(-1);
-            }}
-          >
-            უკან
-          </button>
-          <button type="submit" className={InputCss.nextBtn}>
-            დასრულება
-          </button>
+          <BackButton />
+          <NextButton title="დასრულება" />
         </form>
       </div>
       <Resume showResume={true} formData2={formData2} formData3={formData3} />

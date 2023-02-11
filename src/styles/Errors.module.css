@@ -1,0 +1,28 @@
+.errorLabel {
+  color: #e52f2f;
+}
+.errorBorder {
+  border-color: #e52f2f;
+}
+.successBorder {
+  border-color: #98e37e;
+}
+.errorIcon {
+  background-image: url(../images/Vector.svg);
+  background-repeat: no-repeat;
+  height: 24px;
+  width: 24px;
+  position: absolute;
+  top: 50px;
+  right: -35px;
+}
+
+.successIcon {
+  background-image: url(../images/akar-icons_circle-check-fill.svg);
+  background-repeat: no-repeat;
+  height: 18px;
+  width: 18px;
+  position: absolute;
+  top: 50px;
+  right: 15px;
+}

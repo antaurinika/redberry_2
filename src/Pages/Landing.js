@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import logo from "../images/redberry_logo.png";
 import logo_2 from "../images/logo_2.png";
@@ -6,6 +6,10 @@ import LandingCss from "../styles/Landing.module.css";
 
 export default function Landing() {
   const navigate = useNavigate();
+
+  console.log("rerenderd");
+  sessionStorage.clear();
+
   return (
     <div className={LandingCss.landing}>
       <div className={LandingCss.underline}>
@@ -14,10 +18,8 @@ export default function Landing() {
       <button
         className={LandingCss.button}
         onClick={() => {
-          // setRemoveStorage(true);
           navigate("/personalinfo");
-          sessionStorage.clear();
-          // Object.assign(form)
+          // sessionStorage.clear();
         }}
       >
         რეზიუმეს დამატება
