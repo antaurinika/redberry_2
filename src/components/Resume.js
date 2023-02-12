@@ -19,7 +19,7 @@ export default function Resume({ showResume, formData2, formData3 }) {
         9
       )} ${number?.slice(9, 11)} ${number?.slice(11, 13)}`
     );
-  }, []);
+  }, [formData, serverData]);
 
   return (
     <>
@@ -30,25 +30,32 @@ export default function Resume({ showResume, formData2, formData3 }) {
         <div className={ResumeCss.ResumeFlex}>
           <div className={ResumeCss.leftSide}>
             <h1 className={ResumeCss.username}>
-              {serverData?.name || formData?.name}
-              {serverData?.surname || formData?.surname}
+              {`${serverData?.name || formData?.name} ${
+                serverData?.surname || formData?.surname
+              }`}
             </h1>
             <div>
               <p className={ResumeCss.email}>
-                <span className={ResumeCss.icon}>
-                  <FaAt />
-                </span>
+                {(serverData || formData?.email) && (
+                  <span className={ResumeCss.icon}>
+                    <FaAt />
+                  </span>
+                )}
                 {serverData?.email || formData?.email}
               </p>
               <p className={ResumeCss.phone}>
-                <span className={ResumeCss.icon}>
-                  <FaPhone />
-                </span>
+                {(serverData || formData?.phone_number) && (
+                  <span className={ResumeCss.icon}>
+                    <FaPhone />
+                  </span>
+                )}
                 {(serverData || formData?.phone_number) && formatNumber}
               </p>
             </div>
 
-            <p className={ResumeCss.title}>ჩემს შესახებ</p>
+            {(serverData || formData?.about_me) && (
+              <p className={ResumeCss.title}>ჩემს შესახებ</p>
+            )}
             <p className={ResumeCss.aboutMe}>
               {serverData?.about_me || formData?.about_me}
             </p>
@@ -64,7 +71,9 @@ export default function Resume({ showResume, formData2, formData3 }) {
             alt="user"
           />
         </div>
-        <span className={ResumeCss.underline}></span>
+        {(serverData || formData?.about_me) && (
+          <span className={ResumeCss.underline}></span>
+        )}
         {(serverData || formData2?.position) && (
           <h2 className={ResumeCss.title}>გამოცდილება</h2>
         )}
@@ -97,7 +106,9 @@ export default function Resume({ showResume, formData2, formData3 }) {
         <p className={ResumeCss.description}>
           {serverData?.educations[0]?.description || formData3?.description}
         </p>
-        <img src={logo} className={ResumeCss.footer} alt="logo" />
+        {(serverData || formData3?.description) && (
+          <img src={logo} className={ResumeCss.footer} alt="logo" />
+        )}
       </div>
     </>
   );

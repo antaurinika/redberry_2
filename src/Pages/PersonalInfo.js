@@ -145,11 +145,7 @@ export default function PersonalInfo() {
           <NextButton title="შემდეგი" />
         </form>
       </div>
-      <Resume
-        showResume={showResume}
-        formData2={formData2}
-        formData3={formData3}
-      />
+      <Resume showResume={true} formData2={formData2} formData3={formData3} />
     </div>
   );
 }
