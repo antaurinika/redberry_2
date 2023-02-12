@@ -1,10 +1,9 @@
 import React, { useState } from "react";
-import FetchDegrees from "../components/FetchDegrees";
+import SelectField from "./formFields/SelectField";
 import InputCss from "../styles/InputField.module.css";
-import PageCss from "../styles/Page.module.css";
 import AddMoreButton from "./AddMoreButton";
-import InputField from "./InputField";
-import TextAreaField from "./TextAreaField";
+import InputField from "./formFields/InputField";
+import TextAreaField from "./formFields/TextAreaField";
 export default function EducationForm({ educationValue, formik, data }) {
   const [formList, setFormList] = useState([{ form: "" }]);
 
@@ -26,7 +25,7 @@ export default function EducationForm({ educationValue, formik, data }) {
         />
         <div className={InputCss.shortInputContainer}>
           <>
-            <FetchDegrees
+            <SelectField
               formik={formik}
               educationValue={educationValue}
               data={data}
@@ -56,7 +55,9 @@ export default function EducationForm({ educationValue, formik, data }) {
   return (
     <div>
       {displayForm()}
+      {/* <div onClick={addForm}> */}
       <AddMoreButton title="სასწავლებლის" />
+      {/* </div> */}
     </div>
   );
 }

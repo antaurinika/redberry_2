@@ -8,7 +8,7 @@
   border-color: #98e37e;
 }
 .errorIcon {
-  background-image: url(../images/Vector.svg);
+  background-image: url(../Assets/images/Vector.svg);
   background-repeat: no-repeat;
   height: 24px;
   width: 24px;
@@ -18,7 +18,7 @@
 }
 
 .successIcon {
-  background-image: url(../images/akar-icons_circle-check-fill.svg);
+  background-image: url(../Assets/images/akar-icons_circle-check-fill.svg);
   background-repeat: no-repeat;
   height: 18px;
   width: 18px;

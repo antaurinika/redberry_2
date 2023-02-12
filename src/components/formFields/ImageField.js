@@ -1,8 +1,8 @@
 import React from "react";
-import InputCss from "../styles/InputField.module.css";
-import ErrorCss from "../styles/Errors.module.css";
+import InputCss from "../../styles/InputField.module.css";
+import ErrorCss from "../../styles/Errors.module.css";
 
-export default function ImageField({ imageUrl, formik }) {
+export default function ImageField({ base64, formik }) {
   return (
     <div>
       <div className={InputCss.imageField}>
@@ -25,7 +25,7 @@ export default function ImageField({ imageUrl, formik }) {
           id="image"
           placeholder="ატვირთვა"
           accept="image/png, image/jpg"
-          src={imageUrl}
+          src={base64}
           onChange={(e) => {
             formik.handleChange(e);
           }}

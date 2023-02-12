@@ -8,32 +8,13 @@ import EducationForm from "../components/EducationForm";
 import PageCss from "../styles/Page.module.css";
 import NextButton from "../components/NextButton";
 import BackButton from "../components/BackButton";
+import EducationValidation from "../components/validationRules/EducationValidation";
 
 const initialValues = {
-  educations: {
-    institute: "",
-    degree: "",
-    due_date: "",
-    description: "",
-  },
-};
-const validate = (values) => {
-  let errors = {};
-  if (!values.institute) {
-    errors.institute = "სასწავლებელი სავალდებულოა";
-  } else if (values.institute.length < 2) {
-    errors.institute = "მინიმუმ 2 სიმბოლო";
-  }
-  if (values.degree === "") {
-    errors.degree = "ხარისხი სავალდებულოა";
-  }
-  if (!values.due_date) {
-    errors.due_date = "დამთავრების თარიღი სავალდებულოა";
-  }
-  if (!values.description) {
-    errors.description = "აღწერა სავალდებულოა";
-  }
-  return errors;
+  institute: "",
+  degree: "",
+  due_date: "",
+  description: "",
 };
 
 export default function Education() {
@@ -43,9 +24,7 @@ export default function Education() {
 
   const navigate = useNavigate();
   const [data, setData] = useState([]);
-  const [educationValue, setEducationValue] = useState(
-    initialValues.educations
-  );
+  const [educationValue, setEducationValue] = useState(initialValues);
   const [imageFile, setImageFile] = useState();
 
   useEffect(() => {
@@ -62,8 +41,8 @@ export default function Education() {
       educationValue.description === ""
     ) {
       setEducationValue((prev) => (prev = { ...prev, ...formData3 }));
-      Object.assign(formik.values, formData3);
     }
+    Object.assign(formik.values, formData3);
   }, []);
 
   useEffect(() => {
@@ -72,7 +51,7 @@ export default function Education() {
 
   // ---- convert base64 to file ----
   useEffect(() => {
-    fetch(sessionStorage.getItem("imageUrl"))
+    fetch(sessionStorage.getItem("base64"))
       .then((res) => res.blob())
       .then((blob) => {
         const file = new File([blob], "File name", { type: "image/png" });
@@ -98,15 +77,14 @@ export default function Education() {
   const onSubmit = (values) => {
     if (JSON.stringify(formik.errors) === "{}") {
       delete educationValue.degree;
-      formik.resetForm();
       PostData(formatData());
-      navigate("/resumefinal");
+      setTimeout(() => navigate("/resumefinal"), 500);
     }
   };
   const formik = useFormik({
     initialValues: educationValue,
     onSubmit,
-    validate,
+    validate: EducationValidation,
   });
 
   // --- get degree id for server ---

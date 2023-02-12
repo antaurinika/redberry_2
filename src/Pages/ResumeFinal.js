@@ -7,11 +7,7 @@ import { FaAngleLeft } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
 
 export default function ResumeFinal() {
-  const formData3 = JSON.parse(sessionStorage.getItem("formData3"));
-  const formData2 = JSON.parse(sessionStorage.getItem("formData2"));
-  const formData = JSON.parse(sessionStorage.getItem("formData"));
   const navigate = useNavigate();
-
   return (
     <div>
       <button
@@ -30,12 +26,7 @@ export default function ResumeFinal() {
         }}
       >
         <div className={`${ResumeCss.finalResumeContainer} ${InputCss.scroll}`}>
-          <Resume
-            formData={formData}
-            formData2={formData2}
-            formData3={formData3}
-            showResume={true}
-          />
+          <Resume showResume={true} />
         </div>
       </div>
       <Popup />

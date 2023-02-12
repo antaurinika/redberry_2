@@ -1,14 +1,11 @@
-import React, { useEffect } from "react";
+import React from "react";
 import { useNavigate } from "react-router-dom";
-import logo from "../images/redberry_logo.png";
-import logo_2 from "../images/logo_2.png";
+import logo from "../Assets/images/redberry_logo.png";
+import logo_2 from "../Assets/images/logo_2.png";
 import LandingCss from "../styles/Landing.module.css";
 
 export default function Landing() {
   const navigate = useNavigate();
-
-  console.log("rerenderd");
-  sessionStorage.clear();
 
   return (
     <div className={LandingCss.landing}>
@@ -19,7 +16,6 @@ export default function Landing() {
         className={LandingCss.button}
         onClick={() => {
           navigate("/personalinfo");
-          // sessionStorage.clear();
         }}
       >
         რეზიუმეს დამატება

@@ -1,3 +1,10 @@
+.ResumeFlex {
+  display: flex;
+  gap: 3rem;
+}
+.leftSide {
+  min-width: 432px;
+}
 .username {
   font-size: 34px;
   font-weight: bold;
@@ -24,7 +31,6 @@
   margin: 34px 0 15px 0;
 }
 .aboutMe {
-  /* width: 100%; */
   white-space: pre-wrap;
 }
 .userImage {

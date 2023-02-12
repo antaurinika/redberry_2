@@ -5,11 +5,11 @@ import Resume from "../components/Resume";
 import Header from "../components/Header";
 import PageCss from "../styles/Page.module.css";
 import InputCss from "../styles/InputField.module.css";
-import ErrorCss from "../styles/Errors.module.css";
-import InputField from "../components/InputField";
-import ImageField from "../components/ImageField";
+import InputField from "../components/formFields/InputField";
+import ImageField from "../components/formFields/ImageField";
 import NextButton from "../components/NextButton";
-import TextAreaField from "../components/TextAreaField";
+import TextAreaField from "../components/formFields/TextAreaField";
+import PersonalInfoValidation from "../components/validationRules/PersonalInfoValidation";
 
 const initialValues = {
   name: "",
@@ -20,45 +20,11 @@ const initialValues = {
   phone_number: "",
 };
 
-const validate = (values) => {
-  let errors = {};
-
-  if (!values.name) {
-    errors.name = "სახელი სავალდებულოა";
-  } else if (values.name.length < 2) {
-    errors.name = "მინიმუმ 2 სიმბოლო";
-  } else if (!/^([\u10D0-\u10F0]+)$/.test(values.name)) {
-    errors.name = "მხოლოდ ქართული სიმბოლოები";
-  }
-  if (!values.surname) {
-    errors.surname = "გვარი სავალდებულოა";
-  } else if (values.surname.length < 2) {
-    errors.surname = "მინიმუმ 2 სიმბოლო";
-  } else if (!/^([\u10D0-\u10F0]+)$/.test(values.surname)) {
-    errors.surname = "მხოლოდ ქართული სიმბოლოები";
-  }
-  if (!values.email) {
-    errors.email = "ელ. ფოსტა სავალდებულოა";
-  } else if (!/\S+@\bredberry\b.\bge\b/.test(values.email)) {
-    errors.email = "ელ. ფოსტა უნდა მთავრდებოდეს @redberry.ge-თი";
-  }
-  if (!values.phone_number) {
-    errors.phone_number = "ტელეფონის ნომერი სავალდებულოა";
-  } else if (!/^((\+)995)[5](\d{2})(\d{3})(\d{3})$/.test(values.phone_number)) {
-    errors.phone_number =
-      "უნდა აკმაყოფილებდეს ქართული მობილურის ნომრის ფორმატს";
-  }
-  if (!values.image) {
-    errors.image = "სურათი სავალდებულოა";
-  }
-  return errors;
-};
-
 export default function PersonalInfo() {
   const formData = JSON.parse(sessionStorage.getItem("formData"));
   const formData2 = JSON.parse(sessionStorage.getItem("formData2"));
   const formData3 = JSON.parse(sessionStorage.getItem("formData3"));
-  const imageUrl = sessionStorage.getItem("imageUrl");
+  const base64 = sessionStorage.getItem("base64");
   const showResume = JSON.parse(sessionStorage.getItem("showResume"));
 
   const [value, setValue] = useState(initialValues);
@@ -73,9 +39,9 @@ export default function PersonalInfo() {
       value.phone_number === "" &&
       value.about_me === ""
     ) {
-      setValue((prev) => (prev = { ...prev, ...formData, image: imageUrl }));
-      Object.assign(formik.values, formData);
+      setValue((prev) => (prev = { ...prev, ...formData, image: base64 }));
     }
+    Object.assign(formik.values, formData);
   }, []);
 
   useEffect(() => {
@@ -101,7 +67,7 @@ export default function PersonalInfo() {
   const formik = useFormik({
     initialValues: value,
     onSubmit,
-    validate,
+    validate: PersonalInfoValidation,
   });
 
   const getBase64 = (image) => {
@@ -109,13 +75,15 @@ export default function PersonalInfo() {
     fileReader.onload = () => {
       if (fileReader.readyState === 2) {
         formik.setFieldValue("image", fileReader.result);
-        sessionStorage.setItem("imageUrl", fileReader.result);
+        sessionStorage.setItem("base64", fileReader.result);
       }
     };
     if (image.target.files[0]) {
       fileReader.readAsDataURL(image.target.files[0]);
     }
   };
+  // console.log(formik.values);
+
   return (
     <div className={`${PageCss.window}`}>
       <div className={PageCss.container}>
@@ -147,7 +115,7 @@ export default function PersonalInfo() {
             />
           </div>
           <div className={InputCss.imageContainer}>
-            <ImageField imageUrl={imageUrl} formik={formik} />
+            <ImageField base64={base64} formik={formik} />
           </div>
 
           <TextAreaField

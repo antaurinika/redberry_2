@@ -8,8 +8,9 @@ import PageCss from "../styles/Page.module.css";
 import NextButton from "../components/NextButton";
 import BackButton from "../components/BackButton";
 import AddMoreButton from "../components/AddMoreButton";
-import InputField from "../components/InputField";
-import TextAreaField from "../components/TextAreaField";
+import InputField from "../components/formFields/InputField";
+import TextAreaField from "../components/formFields/TextAreaField";
+import ExperineceValidation from "../components/validationRules/ExperineceValidation";
 const initialValues = {
   experiences: {
     position: "",
@@ -18,30 +19,6 @@ const initialValues = {
     due_date: "",
     description: "",
   },
-};
-
-const validate = (values) => {
-  let errors = {};
-  if (!values.position) {
-    errors.position = "გამოცდილება სავალდებულოა";
-  } else if (values.position.length < 2) {
-    errors.position = "მინიმუმ 2 სიმბოლო";
-  }
-  if (!values.employer) {
-    errors.employer = "სავალდებულოა";
-  } else if (values.employer.length < 2) {
-    errors.employer = "მინიმუმ 2 სიმბოლო";
-  }
-  if (!values.start_date) {
-    errors.start_date = "სავალდებულოა";
-  }
-  if (!values.due_date) {
-    errors.due_date = "სავალდებულოა";
-  }
-  if (!values.description) {
-    errors.description = "სავალდებულოა";
-  }
-  return errors;
 };
 
 export default function Experience() {
@@ -60,8 +37,8 @@ export default function Experience() {
       value.description === ""
     ) {
       setValue((prev) => (prev = { ...prev, ...formData2 }));
-      Object.assign(formik.values, formData2);
     }
+    Object.assign(formik.values, formData2);
   }, []);
 
   useEffect(() => {
@@ -72,7 +49,6 @@ export default function Experience() {
     const name = e.target.name;
     const value = e.target.value;
     setValue((prev) => (prev = { ...prev, [name]: value }));
-    // Object.assign(formik.values, formData2);
   };
 
   const onSubmit = (values) => {
@@ -83,7 +59,7 @@ export default function Experience() {
   const formik = useFormik({
     initialValues: value,
     onSubmit,
-    validate,
+    validate: ExperineceValidation,
   });
 
   return (
@@ -138,7 +114,7 @@ export default function Experience() {
             placeholder="როლი თანამდებობაზე და ზოგადი აღწერა"
           />
           <span className={InputCss.underline}></span>
-          <AddMoreButton />
+          <AddMoreButton title="გამოცდილების" />
           <div>
             <BackButton title="გამოცდილების" />
             <NextButton title="შემდეგი" />

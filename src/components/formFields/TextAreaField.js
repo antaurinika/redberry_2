@@ -1,6 +1,6 @@
 import React from "react";
-import InputCss from "../styles/InputField.module.css";
-import ErrorCss from "../styles/Errors.module.css";
+import InputCss from "../../styles/InputField.module.css";
+import ErrorCss from "../../styles/Errors.module.css";
 
 export default function TextAreaField({ formik, name, label, placeholder }) {
   const toggleBorder = () => {
